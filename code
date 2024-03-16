@@ -1,0 +1,23 @@
+import os
+import numpy as np
+from nibabel import load, Nifti1Image, save
+
+nii = load('C:/Users/user/your_image.nii')
+
+suffix = 'extract'
+
+# extraction ranges
+x_idx_range = slice(85, 169)
+y_idx_range = slice(100, 157)
+z_idx_range = slice(99, 137)
+
+# -----------------------------------------------------------------------------
+print('Extracting...')
+roi = np.asarray(nii.dataobj[x_idx_range, y_idx_range, z_idx_range])
+
+print('Saving...')
+img = Nifti1Image(roi, affine=nii.affine)
+basename, ext = nii.get_filename().split(os.extsep, 1)
+out_name = '{}_{}.{}'.format(basename, suffix, ext)
+save(img, out_name)
+print('Finished.')
